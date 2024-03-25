@@ -22,6 +22,15 @@ class BerkovichTest:
         self.time_on_sample_unload_segment = time_on_sample[2]
         self.time_on_sample_thermal_hold_segment = time_on_sample[3]
 
+        self.max_height = all_values[3]
+        self.unload_height = all_values[4]
+        self.elastic_height = all_values[5]
+        self.pressure = all_values[6]
+
+        self.stiffness = all_values[7]
+        self.modulus = all_values[8]
+        self.hardness_table = all_values[9]
+
 def get_segment_indexes(data_frame: pandas.DataFrame):
     column_segment = data_frame.iloc[:, 0].to_list()
     step_1 = 0
@@ -55,6 +64,10 @@ def get_list_values_from_indexes(column_data: list, load_segment_index: int, hol
 
     return load_segment, hold_segment, unload_segment, thermal_hold_segment
 
+def get_column_value_by_row_index(data_frame: pandas.DataFrame, column_index: int, row_index: int):
+    data = data_frame.iloc[:, column_index].to_list()
+    return data[row_index]
+
 def get_column_values(data_frame: pandas.DataFrame, column_index: int, load_segment_index: int, hold_segment_index: int, unload_segment_index: int, thermal_hold_segment_index: int):
     data = data_frame.iloc[:, column_index].to_list()
     load_segment, hold_segment, unload_segment, thermal_hold_segment = get_list_values_from_indexes(data, load_segment_index, hold_segment_index, unload_segment_index, thermal_hold_segment_index)
@@ -70,4 +83,14 @@ def get_all_values_from_sheet(data_frame: pandas.DataFrame):
     displacement = [displacement1, displacement2, displacement3, displacement4]
     load_on_sample = [load_on_sample1, load_on_sample2, load_on_sample3, load_on_sample4]
     time_on_sample = [time_on_sample1, time_on_sample2, time_on_sample3, time_on_sample4]
-    return displacement, load_on_sample, time_on_sample
+
+    max_height = get_column_value_by_row_index(data_frame, 1, unload_segment_index - 1)
+    unload_height = displacement4[-1]
+    elastic_height = max_height - unload_height
+    pressure = load_on_sample3[-1]
+
+    stiffness = get_column_value_by_row_index(data_frame, 4, unload_segment_index)
+    modulus = get_column_value_by_row_index(data_frame, 5, unload_segment_index)
+    hardness = get_column_value_by_row_index(data_frame, 6, unload_segment_index)
+
+    return displacement, load_on_sample, time_on_sample, max_height, unload_height, elastic_height, pressure, stiffness, modulus, hardness
