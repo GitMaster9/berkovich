@@ -10,7 +10,7 @@ def get_pressure_in_newtons(pressure_in_millinewtons: float):
     return pressure_in_millinewtons * 1e-3
 
 def calculate_height(max_height: float, elastic_height: float):
-    return (max_height - elastic_height) / 2
+    return max_height - (elastic_height / 2)
 
 def calculate_hardness(pressure: float, area: float):
     return pressure / area
