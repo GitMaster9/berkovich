@@ -38,7 +38,7 @@ class BerkovichTest:
 
     def __str__(self):
         test_index = 36 - self.index
-        output = f"Test{test_index}\n"
+        output = f"Test0{test_index}\n"
         output += f"h_max = {round(self.max_height, 3)} nm\n"
         output += f"h_unload = {round(self.unload_height, 3)} nm\n"
         output += f"h_el = {round(self.elastic_height, 3)} nm\n"
@@ -104,9 +104,9 @@ def get_all_values_from_sheet(data_frame: pandas.DataFrame):
     time_on_sample = [time_on_sample1, time_on_sample2, time_on_sample3, time_on_sample4]
 
     max_height = get_column_value_by_row_index(data_frame, 1, unload_segment_index - 1)
-    unload_height = displacement4[-1]
+    unload_height = displacement3[-1]
     elastic_height = max_height - unload_height
-    pressure = load_on_sample3[-1]
+    pressure = load_on_sample1[-1]
 
     stiffness = get_column_value_by_row_index(data_frame, 4, unload_segment_index)
     modulus = get_column_value_by_row_index(data_frame, 5, unload_segment_index)
