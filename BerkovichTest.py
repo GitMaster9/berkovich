@@ -1,7 +1,8 @@
 import pandas
 
 class BerkovichTest:
-    def __init__(self, data_frame: pandas.DataFrame):
+    def __init__(self, data_frame: pandas.DataFrame, index: int):
+        self.index = index
         all_values = get_all_values_from_sheet(data_frame)
         
         displacement = all_values[0]
@@ -30,6 +31,24 @@ class BerkovichTest:
         self.stiffness = all_values[7]
         self.modulus = all_values[8]
         self.hardness_table = all_values[9]
+
+        self.h_c = calculate_height(nm_to_m(self.max_height), nm_to_m(self.elastic_height))
+        self.area = calculate_area(self.h_c)
+        self.hardness = Pa_to_GPA(calculate_hardness(mN_to_N(self.pressure), self.area))
+
+    def __str__(self):
+        test_index = 36 - self.index
+        output = f"Test{test_index}\n"
+        output += f"h_max = {round(self.max_height, 3)} nm\n"
+        output += f"h_unload = {round(self.unload_height, 3)} nm\n"
+        output += f"h_el = {round(self.elastic_height, 3)} nm\n"
+        output += f"pressure = {round(self.pressure, 3)} mN\n"
+        
+        #output += f"h_c = {self.h_c} m\n"
+        #output += f"area = {self.area} m2\n"
+        output += f"hardness = {round(self.hardness, 3)} GPa\n"
+
+        return output
 
 def get_segment_indexes(data_frame: pandas.DataFrame):
     column_segment = data_frame.iloc[:, 0].to_list()
@@ -94,3 +113,21 @@ def get_all_values_from_sheet(data_frame: pandas.DataFrame):
     hardness = get_column_value_by_row_index(data_frame, 6, unload_segment_index)
 
     return displacement, load_on_sample, time_on_sample, max_height, unload_height, elastic_height, pressure, stiffness, modulus, hardness
+
+def calculate_height(max_height: float, elastic_height: float):
+    return max_height - (elastic_height / 2)
+
+def calculate_hardness(pressure: float, area: float):
+    return pressure / area
+
+def calculate_area(hc: float):
+    return 24.5 * (hc ** 2)
+
+def nm_to_m(nanometers: float):
+    return nanometers * 1e-9
+
+def mN_to_N(millinewtons: float):
+    return millinewtons * 1e-3
+
+def Pa_to_GPA(pascals: float):
+    return pascals * 1e-9
