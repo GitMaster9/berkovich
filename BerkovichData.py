@@ -4,7 +4,7 @@ class BerkovichData:
     """
     Class for getting the data from the DataFrame needed for further calculations.
     """
-    def __init__(self, data_frame: pandas.DataFrame, test_number: int = 1):
+    def __init__(self, data_frame: pandas.DataFrame, test_number: int = 35):
         """
         Initialization function which sets all the fields.
         """
@@ -77,6 +77,21 @@ class BerkovichData:
         [0] - displacement,
         [1] - load on sample,
         [2] - time on sample
+        """
+
+        self.displacement = displacement_load_segment + displacement_hold_segment + displacement_unload_segment + displacement_thermal_hold_segment
+        """
+        Contains all displacement values in a list.
+        """
+
+        self.load_on_sample = load_on_sample_load_segment + load_on_sample_hold_segment + load_on_sample_unload_segment + load_on_sample_thermal_hold_segment
+        """
+        Contains all load on sample values in a list.
+        """
+
+        self.time_on_sample = time_on_sample_load_segment + time_on_sample_hold_segment + time_on_sample_unload_segment + time_on_sample_thermal_hold_segment
+        """
+        Contains all time on sample values in a list.
         """
 
         # getting data from the Hold segment
